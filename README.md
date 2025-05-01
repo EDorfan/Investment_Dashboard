@@ -6,6 +6,9 @@
 
 ### Phase 1: Core Foundation (MVP)
 * User-specific Portfolio Management (e.g. add stocks, quantity, price)
+    * function to get current price and display loss / profit for each holding
+    * Delete transaction if entered incorrectly
+
 * Data Ingestion API – fetch stock/ETF/crypto prices
 * Daily Price History Storage
 * Portfolio Value Over Time (Analytics)

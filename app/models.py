@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from app.extensions import mysql
+from collections import namedtuple
 
 class User(UserMixin):
     
@@ -15,20 +16,42 @@ class User(UserMixin):
         self.email = email
         self.password = password
     
-    # The get_user_by_id method is a class method that:
-    #   - Takes a user_id parameter
-    #   - Creates a database cursor
-    #   - Executes a SQL query to find a user by their ID
-    #   - Fetches the result and closes the cursor
-    #   - Returns a new User instance with the database values
+# The get_user_by_id method is a class method that:
+#   - Takes a user_id parameter
+#   - Creates a database cursor
+#   - Executes a SQL query to find a user by their ID
+#   - Fetches the result and closes the cursor
+#   - Returns a new User instance with the database values
 def get_user_by_id(user_id):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     return User(user[0], user[1], user[2], user[3])
-    
 
-        
+# Function to add new transactions to database based off own users information
+def add_transaction(user_id, ticker, quantity, price, transaction_type, transaction_date):
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO transactions (user_id, ticker, quantity, price, transaction_type, transaction_date) VALUES (%s, %s, %s, %s, %s, %s)",
+                   (user_id, ticker, quantity, price, transaction_type, transaction_date))
+    mysql.connection.commit()
+    cursor.close()
 
-    
+def get_all_transactions(user_id):
+    # build out the connection
+    cursor = mysql.connection.cursor()
+    # aggregate quantity by ticker (find cumulative value and number of shares)
+    cursor.execute("""
+        SELECT 
+            ticker, 
+            SUM(quantity) AS quantity, 
+            SUM(quantity * price) AS value,
+            MAX(transaction_date) as last_transaction_date
+        FROM transactions
+        WHERE user_id = %s
+        GROUP BY ticker
+        HAVING SUM(quantity) != 0
+    """, (user_id,))
+    transactions = cursor.fetchall()
+    cursor.close()
+    return transactions

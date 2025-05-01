@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import mysql
-from app.models import User, get_user_by_id
-from app.forms import RegisterForm, LoginForm
+from app.models import User, get_user_by_id, add_transaction, get_all_transactions
+from app.forms import RegisterForm, LoginForm, TransactionForm
 
 main = Blueprint('main', __name__)
 
@@ -58,3 +58,22 @@ def dashboard():
 def logout():
     logout_user()
     return redirect(url_for('main.login'))
+
+# Routes to add personal transactions and display them
+@main.route('/personal_portfolio', methods=['GET', 'POST'])
+@login_required
+def personal_portfolio():
+    form = TransactionForm()
+    if form.validate_on_submit():
+        add_transaction(
+            current_user.id, 
+            form.ticker.data.upper(), 
+            form.quantity.data,
+            form.price.data,
+            form.transaction_type.data, 
+            form.transaction_date.data
+        )
+        flash('Transaction added successfully', 'success')
+        return redirect(url_for('main.personal_portfolio'))
+    holdings = get_all_transactions(current_user.id)
+    return render_template('personal_portfolio.html', form=form, holdings=holdings)

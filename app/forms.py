@@ -9,7 +9,7 @@
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, FloatField, SelectField, DateField
 from wtforms.validators import DataRequired, Email, Length
 
 class RegisterForm(FlaskForm):
@@ -22,3 +22,12 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
+class TransactionForm(FlaskForm):
+    ticker = StringField('Ticker', validators=[DataRequired()])
+    quantity = FloatField('Quantity', validators=[DataRequired()])
+    price = FloatField('Price', validators=[DataRequired()])
+    transaction_type = SelectField('Transaction Type', choices=[('buy', 'Buy'), ('sell', 'Sell')])
+    transaction_date = DateField('Transaction Date', validators=[DataRequired()])
+    submit = SubmitField('Add Transaction')
+

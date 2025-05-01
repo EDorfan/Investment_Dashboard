@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Personal Portfolio - Investment Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Transaction Form -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Add Transaction</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('main.personal_portfolio') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.ticker.label(class="form-label") }}
+                        {{ form.ticker(class="form-control", placeholder="e.g., AAPL") }}
+                        {% if form.ticker.errors %}
+                            {% for error in form.ticker.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.quantity.label(class="form-label") }}
+                        {{ form.quantity(class="form-control", type="number", step="0.01") }}
+                        {% if form.quantity.errors %}
+                            {% for error in form.quantity.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.price.label(class="form-label") }}
+                        {{ form.price(class="form-control", type="number", step="0.01") }}
+                        {% if form.price.errors %}
+                            {% for error in form.price.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.transaction_type.label(class="form-label") }}
+                        {{ form.transaction_type(class="form-select") }}
+                        {% if form.transaction_type.errors %}
+                            {% for error in form.transaction_type.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.transaction_date.label(class="form-label") }}
+                        {{ form.transaction_date(class="form-control", type="date") }}
+                        {% if form.transaction_date.errors %}
+                            {% for error in form.transaction_date.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Portfolio Holdings</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Quantity</th>
+                                <th>Total Value</th>
+                                <th>Average Price</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for holding in holdings %}
+                            <tr>
+                                <td>{{ holding[0] }}</td>
+                                <td>{{ "%.2f"|format(holding[1]) }}</td>
+                                <td>${{ "%.2f"|format(holding[2]) }}</td>
+                                <td>${{ "%.2f"|format(holding[2] / holding[1] if holding[1] != 0 else 0) }}</td>
+                                <td>{{ holding[3] }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No holdings recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
