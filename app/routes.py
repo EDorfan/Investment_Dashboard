@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import mysql
-from app.models import User, get_user_by_id, add_transaction, get_all_transactions
+from app.models import User, get_user_by_id, add_transaction, get_all_transactions, get_transaction_history
 from app.forms import RegisterForm, LoginForm, TransactionForm
 
 main = Blueprint('main', __name__)
@@ -76,4 +76,5 @@ def personal_portfolio():
         flash('Transaction added successfully', 'success')
         return redirect(url_for('main.personal_portfolio'))
     holdings = get_all_transactions(current_user.id)
-    return render_template('personal_portfolio.html', form=form, holdings=holdings)
+    history = get_transaction_history(current_user.id)
+    return render_template('personal_portfolio.html', form=form, holdings=holdings, history=history)

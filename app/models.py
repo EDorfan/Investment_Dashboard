@@ -44,14 +44,38 @@ def get_all_transactions(user_id):
     cursor.execute("""
         SELECT 
             ticker, 
-            SUM(quantity) AS quantity, 
-            SUM(quantity * price) AS value,
+            SUM(CASE WHEN transaction_type = 'buy' THEN quantity ELSE -quantity END) AS quantity, 
+            SUM(CASE 
+                WHEN transaction_type = 'buy' THEN -(quantity * price)
+                ELSE (quantity * price)
+            END) AS value,
             MAX(transaction_date) as last_transaction_date
         FROM transactions
         WHERE user_id = %s
         GROUP BY ticker
-        HAVING SUM(quantity) != 0
+        HAVING SUM(CASE WHEN transaction_type = 'buy' THEN quantity ELSE -quantity END) != 0
     """, (user_id,))
     transactions = cursor.fetchall()
     cursor.close()
     return transactions
+
+def get_transaction_history(user_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        SELECT 
+            ticker,
+            quantity,
+            price,
+            transaction_type,
+            transaction_date,
+            CASE 
+                WHEN transaction_type = 'buy' THEN -(quantity * price)
+                ELSE (quantity * price)
+            END as value
+        FROM transactions
+        WHERE user_id = %s
+        ORDER BY transaction_date DESC
+    """, (user_id,))
+    history = cursor.fetchall()
+    cursor.close()
+    return history
