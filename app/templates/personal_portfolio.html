@@ -93,9 +93,12 @@
                             <tr>
                                 <th>Ticker</th>
                                 <th>Quantity</th>
-                                <th>Total Value</th>
-                                <th>Average Price</th>
-                                <th>Last Transaction</th>
+                                <th>Invested Value</th>
+                                <th>Current Price</th>
+                                <th>Current Value</th>
+                                <th>Avg Buy Price</th>
+                                <th>Price Change</th>
+                                <th>Last Price Update</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,12 +109,19 @@
                                 <td class="{% if holding[2] < 0 %}text-danger{% else %}text-success{% endif %}">
                                     ${{ "%.2f"|format(holding[2]) }}
                                 </td>
-                                <td>${{ "%.2f"|format(holding[2] / holding[1] if holding[1] != 0 else 0) }}</td>
-                                <td>{{ holding[3] }}</td>
+                                <td>${{ "%.2f"|format(holding[3]) if holding[3] else 'Waiting for price update' }}</td>
+                                <td class="{% if holding[4] < 0 %}text-danger{% else %}text-success{% endif %}">
+                                    ${{ "%.2f"|format(holding[4]) if holding[4] else 'Waiting for price update' }}
+                                </td>
+                                <td>${{ "%.2f"|format(holding[6]) if holding[6] else 'Waiting for price update' }}</td>
+                                <td class="{% if holding[7] < 0 %}text-danger{% else %}text-success{% endif %}">
+                                    {{ "%.2f"|format(holding[7]) if holding[7] is not none else 'Waiting for price update' }}%
+                                </td>
+                                <td>{{ holding[5] if holding[5] else 'Waiting for price update' }}</td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="5" class="text-center">No holdings recorded yet.</td>
+                                <td colspan="6" class="text-center">No holdings recorded yet.</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -165,12 +175,13 @@
 
 {% block scripts %}
 <script>
+/* eslint-disable */
 document.addEventListener('DOMContentLoaded', function() {
     // Portfolio Allocation Pie Chart
     const portfolioData = {
         labels: [{% for holding in holdings %}'{{ holding[0] }}'{% if not loop.last %}, {% endif %}{% endfor %}],
         datasets: [{
-            data: [{% for holding in holdings %}{{ holding[2] }}{% if not loop.last %}, {% endif %}{% endfor %}],
+            data: [{% for holding in holdings %}{{ holding[4] }}{% if not loop.last %}, {% endif %}{% endfor %}],
             backgroundColor: [
                 '#FF6384',
                 '#36A2EB',
