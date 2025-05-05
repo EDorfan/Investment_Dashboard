@@ -12,3 +12,4 @@ CREATE TABLE transactions (
     transaction_date DATE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+

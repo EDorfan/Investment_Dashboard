@@ -48,8 +48,8 @@ def add_transaction(user_id, ticker, quantity, price, transaction_type, transact
             cursor.execute("""
                 INSERT INTO stock_prices 
                 (ticker, price, timestamp) 
-                VALUES (%s, %s, %s)
-            """, (ticker, price, transaction_date))
+                VALUES (%s, %s, NOW())
+            """, (ticker, price))
         
         # Commit the transaction
         mysql.connection.commit()
@@ -193,3 +193,76 @@ def get_transaction_history(user_id):
     cursor.close()
     return history
 
+def get_portfolio_history(user_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+        WITH portfolio_dates AS (
+            SELECT DISTINCT DATE(timestamp) as date
+            FROM stock_prices sp
+            JOIN transactions t ON sp.ticker = t.ticker
+            WHERE t.user_id = %s
+        ),
+        daily_holdings AS (
+            SELECT 
+                pd.date,
+                t.ticker,
+                SUM(CASE WHEN tr.transaction_type = 'buy' THEN tr.quantity ELSE -tr.quantity END) as quantity
+            FROM portfolio_dates pd
+            CROSS JOIN (
+                SELECT DISTINCT ticker 
+                FROM transactions 
+                WHERE user_id = %s
+            ) t
+            LEFT JOIN transactions tr ON tr.ticker = t.ticker 
+                AND tr.user_id = %s 
+                AND tr.transaction_date <= pd.date
+            GROUP BY pd.date, t.ticker
+            HAVING SUM(CASE WHEN tr.transaction_type = 'buy' THEN tr.quantity ELSE -tr.quantity END) > 0
+        ),
+        daily_prices AS (
+            SELECT 
+                dh.date,
+                dh.ticker,
+                dh.quantity,
+                (SELECT price 
+                 FROM stock_prices sp 
+                 WHERE sp.ticker = dh.ticker 
+                 AND DATE(sp.timestamp) = dh.date
+                 AND TIME(sp.timestamp) <= '18:00:00'
+                 AND price IS NOT NULL 
+                 AND price > 0
+                 ORDER BY sp.timestamp DESC 
+                 LIMIT 1) as price
+            FROM daily_holdings dh
+        ),
+        daily_values AS (
+            SELECT 
+                date,
+                SUM(quantity * price) as portfolio_value
+            FROM daily_prices
+            WHERE price IS NOT NULL AND price > 0
+            GROUP BY date
+        ),
+        daily_changes AS (
+            SELECT 
+                date,
+                portfolio_value,
+                LAG(portfolio_value) OVER (ORDER BY date) as prev_value,
+                CASE 
+                    WHEN LAG(portfolio_value) OVER (ORDER BY date) IS NULL THEN 0
+                    WHEN LAG(portfolio_value) OVER (ORDER BY date) < 10 THEN 0
+                    ELSE LEAST(GREATEST(((portfolio_value / LAG(portfolio_value) OVER (ORDER BY date)) - 1) * 100, -100), 1000)
+                END as daily_percentage_change
+            FROM daily_values
+        )
+        SELECT 
+            date,
+            daily_percentage_change as percentage_change
+        FROM daily_changes
+        WHERE portfolio_value IS NOT NULL 
+        AND portfolio_value > 0
+        ORDER BY date
+    """, (user_id, user_id, user_id))
+    history = cursor.fetchall()
+    cursor.close()
+    return history

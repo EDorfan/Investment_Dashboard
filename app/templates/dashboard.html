@@ -3,10 +3,255 @@
 {% block title %}Dashboard - Investment Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h1>Welcome, {{ username }}!</h1>
-        <p class="lead">This is your investment dashboard. More features coming soon!</p>
+<div class="row mb-4">
+    <!-- Profile Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <!-- Professional Photo -->
+                <div class="mb-4">
+                    <img src="{{ url_for('static', filename='images/biography-pic.jpg') }}" 
+                         alt="Professional Photo" 
+                         class="img-fluid rounded-circle"
+                         style="max-width: 200px; height: auto;">
+                </div>
+                
+                <!-- Social Links -->
+                <div class="social-links mb-4">
+                    <a href="https://github.com/EDorfan" target="_blank" class="me-3">
+                        <img src="{{ url_for('static', filename='images/github-icon.png') }}" 
+                             alt="GitHub" 
+                             style="width: 32px; height: 32px;">
+                    </a>
+                    <a href="https://www.linkedin.com/in/eyal-dorfan/" target="_blank">
+                        <img src="{{ url_for('static', filename='images/linkedin-icon.png') }}" 
+                             alt="LinkedIn" 
+                             style="width: 32px; height: 32px;">
+                    </a>
+                </div>
+                
+                <!-- Biography -->
+                <div class="biography">
+                    <h4>About Me</h4>
+                    <p class="text-muted">
+                        Analytical and intellectually curious with a strong foundation in finance and engineering. Passionate about solving complex problems using data-driven insights and strategic thinking. Motivated to contribute to high-performing advisory or investment teams, particularly those focused on innovation, technology, and high-growth sectors.
+                    </p>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="skills mt-4">
+                    <h4>Skills</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-muted">Technical</h6>
+                            <ul class="list-unstyled">
+                                <li>• Financial Modeling</li>
+                                <li>• Python</li>
+                                <li>• SQL</li>
+                                <li>• Data Analysis</li>
+                                <li>• Flutter</li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-muted">Professional</h6>
+                            <ul class="list-unstyled">
+                                <li>• M&A Advisory</li>
+                                <li>• Project Management</li>
+                                <li>• Strategic Planning</li>
+                                <li>• Risk Assessment</li>
+                                <li>• Stakeholder Management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1>Welcome, {{ username }}!</h1>
+                <p class="lead">This is your investment dashboard. More features coming soon!</p>
+            </div>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Work Experience</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Experience Box 1 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Undergraduate Advisor</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">E3 Advisory</h6>
+                                    </div>
+                                    <a href="https://www.e3advisory.com/" target="_blank">
+                                        <img src="{{ url_for('static', filename='images/e3-logo.jpeg') }}" 
+                                            alt="E3 Advisory Logo" 
+                                            style="width: 40px; height: 40px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <p class="card-text">Consults on delivery of successful infrastructure solutions. Responsible for: <br>
+                                    •	Developing a renewable energy investment strategy and predictive solar panel consumption models to 2050. <br>
+                                    •	Designed project management frameworks for large-scale infrastructure and renewable energy projects, with a focus on budget control, risk mitigation, sourcing, and procurement strategy.
+                                    </p>
+                                <p class="card-text"><small class="text-muted">9 months (Dec 23 - Aug 24)</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Experience Box 2 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">M&A Analyst</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Monash Advisory</h6>
+                                    </div>
+                                    <a href="https://www.monashadvisory.com/" target="_blank">
+                                        <img src="{{ url_for('static', filename='images/monash-logo.jpeg') }}" 
+                                            alt="Monash Advisory Logo" 
+                                            style="width: 40px; height: 40px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <p class="card-text">Corporate advisory firm facilitating business M&A, strategic reviews and capital raisings. Responsible for: <br>
+                                    •	Building financial models as part of sales process for Karras, PresMed and Healthia (publicly announced deals). <br>
+                                    •	Preparing and presenting market research for companies operating in transport and healthcare sectors. <br>
+                                    •	Reviewing client proposals and contributed towards presentations and information memorandums.
+                                    •	Conducting reviews of financial due diligence materials and prepared materials for virtual data room.
+                                    </p>
+                                <p class="card-text"><small class="text-muted">14 months (Sep 22 - Nov 23)</small></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Experience Box 3 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Software Developer Intern</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">TANNA AI</h6>
+                                    </div>
+                                    <a href="https://www.linkedin.com/company/tanna-ai/" target="_blank">
+                                        <img src="{{ url_for('static', filename='images/tanna-logo.jpeg') }}" 
+                                            alt="TANNA AI Logo" 
+                                         style="width: 40px; height: 40px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <p class="card-text">Technology start-up leveraging proprietary AI technology to assist students note taking, study, and revision exercises. <br>
+                                    •	Developed basic proficiency in application development coding language, Flutter. <br>
+                                    •	Designed and coded front-end visualisations for incorporation into application.
+                                    </p>
+                                <p class="card-text"><small class="text-muted">2 months (Jun 22 - Aug 22)</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Experience Box 4 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">Business Analyst</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Neeon</h6>
+                                    </div>
+                                    <a href="https://www.linkedin.com/company/neeon/" target="_blank">
+                                        <img src="{{ url_for('static', filename='images/neeon-logo.jpeg') }}" 
+                                            alt="Neeon Logo" 
+                                            style="width: 40px; height: 40px; object-fit: contain;">
+                                    </a>
+                                </div>
+                                <p class="card-text">Fintech start up intending to become a non-bank lender to SMEs. Responsible for: <br>
+                                    •	Developing credit decisioning workflows and processes that can quickly verify a SME loan application. <br>
+                                    •	Analysed KYC data requirements and evaluated preferred bank statement data providers for credit workflows. <br>
+                                    •	Led the RFI process to evaluate consumer and business credit bureaus, providing a board recommendation. <br>
+                                    •	Assisted the head of credit to develop the credit risk framework.
+                                    </p>
+                                <p class="card-text"><small class="text-muted">3 months (Feb 22 - May 22)</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Volunteering Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Volunteering & Community</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Volunteering Box 1 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">[Volunteer Position 1]</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">[Organization 1]</h6>
+                                    </div>
+                                    <img src="{{ url_for('static', filename='images/org1-logo.png') }}" 
+                                         alt="Organization 1 Logo" 
+                                         style="width: 40px; height: 40px; object-fit: contain;">
+                                </div>
+                                <p class="card-text">[Description of your volunteer work and impact]</p>
+                                <p class="card-text"><small class="text-muted">[Duration]</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Volunteering Box 2 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">[Volunteer Position 2]</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">[Organization 2]</h6>
+                                    </div>
+                                    <img src="{{ url_for('static', filename='images/org2-logo.png') }}" 
+                                         alt="Organization 2 Logo" 
+                                         style="width: 40px; height: 40px; object-fit: contain;">
+                                </div>
+                                <p class="card-text">[Description of your volunteer work and impact]</p>
+                                <p class="card-text"><small class="text-muted">[Duration]</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Website Explanation -->
+        <div class="card">
+            <div class="card-header">
+                <h4>How This Website Works</h4>
+            </div>
+            <div class="card-body">
+                <p>
+                    This investment dashboard is designed to help you track and manage your investment portfolio. Here's how it works:
+                </p>
+                <ul>
+                    <li><strong>Portfolio Tracking:</strong> Add your stock transactions and track your portfolio's performance over time.</li>
+                    <li><strong>Real-time Updates:</strong> Stock prices are updated daily at 6 PM to give you the most current portfolio value.</li>
+                    <li><strong>Visual Analytics:</strong> View your portfolio's performance through interactive charts and graphs.</li>
+                    <li><strong>Transaction History:</strong> Keep track of all your buy and sell transactions in one place.</li>
+                </ul>
+                <p>
+                    To get started, navigate to the "Add Transaction / Personal Portfolio" section in the navigation bar.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
